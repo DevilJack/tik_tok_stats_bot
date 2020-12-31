@@ -9,10 +9,9 @@ from aiogram import Bot, Dispatcher, executor, types
 from aiogram.dispatcher.storage import FSMContext
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 
-from config import TOKEN, ROLES_KEYBOARD
-from states import LoginForm, TTStatsForm
+from config import TOKEN
+from states import TTStatsForm
 from do import do_remember_user_start
-from postgres_funcs import create_new_user, check_users_login_password_role
 
 
 root_logger= logging.getLogger()
@@ -154,79 +153,3 @@ async def send_help_command(message: types.Message):
 
 if __name__ == '__main__':
     executor.start_polling(dp, skip_updates=False)
-
-
-
-
-
-
-
-# @dp.message_handler(state=LoginForm.tik_tok_name)
-# async def welcome_tik_tok_name_handler(message: types.Message, state: FSMContext):
-#     await state.update_data(tik_tok_name=message.text)
-#     await state.update_data(tik_tok_id="12345") # генерить тик ток айди и записывать тут
-#     await message.answer("Выбери роль, под которой хочешь войти: (используй кнопки)", reply_markup=ROLES_KEYBOARD)
-#     await LoginForm.role.set()
-
-
-# @dp.callback_query_handler(lambda callback_query: True, state=LoginForm.role)
-# async def welcome_role_callback_query_handler(callback_query: types.CallbackQuery, state: FSMContext):
-#     await state.update_data(role=callback_query.data)
-    
-#     if callback_query.data == "admin":
-#         await callback_query.message.answer("Введи логин, выданный тебе разработчиками:")
-#         await LoginForm.login.set()
-    
-#     elif callback_query.data == "user":
-#         await callback_query.message.answer("Регистрирую тебя..")
-#         await state.update_data(chat_id=callback_query.message.chat.id)
-#         await state.update_data(login="")
-#         await state.update_data(password="")
-#         await state.update_data(status="active")
-#         user_data = await state.get_data()
-#         is_created = create_new_user(user_data)
-#         if is_created:
-#             await callback_query.message.answer("Ты успешно зарегитрирован!")
-#         else:
-#             await callback_query.message.answer("При регистрации произошла ошибка, пожалуйста, попробуй позже")
-        
-#         await state.reset_state(with_data=True)
-
-
-# @dp.message_handler(state=LoginForm.login)
-# async def welcome_login_message_handler(message: types.Message, state: FSMContext):
-#     await state.update_data(login=message.text)
-    
-#     await message.answer("Введи пароль, выданный тебе разработчиками:")
-
-#     await LoginForm.password.set()
-
-
-# @dp.message_handler(state=LoginForm.password)
-# async def welcome_password_message_handler(message: types.Message, state: FSMContext):
-#     await state.update_data(password=message.text)
-    
-#     await message.answer("Проверяю твой логин и пароль..")
-
-#     user_data = await state.get_data()
-
-#     is_correct_user = check_users_login_password_role(user_data)
-
-#     if is_correct_user:
-#         await message.answer("Твои данные верны! Регистрирую тебя как админа..")
-
-#         await state.update_data(chat_id=message.chat.id)
-#         await state.update_data(status="active")
-#         user_data = await state.get_data()
-
-#         is_created = create_new_user(user_data)
-
-#         if is_created:
-#             await message.answer("Ты успешно зарегитрирован!")
-#         else:
-#             await message.answer("При регистрации произошла ошибка, пожалуйста, попробуй позже")
-        
-#         await state.reset_state(with_data=True)
-#     else:
-#         await message.answer("Извини, но твои данные неверны, ты не можешь войти как админ")
-#         await state.reset_state(with_data=True)
