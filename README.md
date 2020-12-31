@@ -5,7 +5,7 @@ pip3 install numpy
 
 создать файлик config.ini следующей структуры:
 
-[tokens]
+[tokens]\n
 TOKEN = ваш_токен
 
 (внимание! токен без кавычек)
